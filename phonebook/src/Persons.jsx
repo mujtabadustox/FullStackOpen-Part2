@@ -1,12 +1,17 @@
 import React from "react";
 
-const Persons = ({ showAll, persons, filteredName }) => {
+const Persons = ({ showAll, persons, filteredName, deletePerson }) => {
   return (
     <div>
       {showAll
         ? persons.map((person) => (
             <p>
-              {person.name} {person.number}
+              {person.name} {person.number}{" "}
+              {
+                <button value={person.name} onClick={deletePerson}>
+                  delete
+                </button>
+              }
             </p>
           ))
         : persons
@@ -15,7 +20,8 @@ const Persons = ({ showAll, persons, filteredName }) => {
             )
             .map((person) => (
               <p>
-                {person.name} {person.number}
+                {person.name} {person.number}{" "}
+                {<button onClick={deletePerson}>delete</button>}
               </p>
             ))}
     </div>
