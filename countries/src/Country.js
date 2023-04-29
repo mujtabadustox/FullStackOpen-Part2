@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Weather from "./Weather";
 
 const Country = ({ filteredCountries, btnPressed, isPressed }) => {
@@ -7,8 +7,8 @@ const Country = ({ filteredCountries, btnPressed, isPressed }) => {
       {filteredCountries &&
         filteredCountries.length !== 1 &&
         filteredCountries.length < 10 &&
-        filteredCountries.map((countries) => (
-          <div>
+        filteredCountries.map((countries, index) => (
+          <div key={index}>
             <p>
               {countries.name.common}{" "}
               <button
@@ -23,8 +23,8 @@ const Country = ({ filteredCountries, btnPressed, isPressed }) => {
         ))}
       {filteredCountries &&
         (filteredCountries.length === 1 || isPressed) &&
-        filteredCountries.map((countries) => (
-          <div>
+        filteredCountries.map((countries, index) => (
+          <div key={index}>
             <h1>{countries.name.common}</h1>
             <p>Capital:{countries.capital}</p>
             <p>Area:{countries.area}</p>
@@ -32,7 +32,7 @@ const Country = ({ filteredCountries, btnPressed, isPressed }) => {
             {countries.languages &&
               Object.entries(countries.languages).map(([key, value]) => (
                 <div>
-                  <p>{value}</p>
+                  <p key={key}>{value}</p>
                   {console.log("sss", value)}
                 </div>
               ))}

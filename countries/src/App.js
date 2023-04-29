@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Country from "./Country";
-import { isEditable } from "@testing-library/user-event/dist/utils";
+import Filter from "./Filter";
 
 const App = () => {
   const [countries, setCountries] = useState(null);
@@ -54,11 +54,14 @@ const App = () => {
     setIsPressed(!isPressed);
   };
 
-  return (
+  return countries ? (
     <div>
       <div>
         Find Countries
-        <input value={searchedCountry} onChange={searchCountries}></input>
+        <Filter
+          searchedCountry={searchedCountry}
+          searchCountries={searchCountries}
+        />
       </div>
       <div>
         <Country
@@ -68,6 +71,8 @@ const App = () => {
         />
       </div>
     </div>
+  ) : (
+    <div>Loading Please Wait</div>
   );
 };
 

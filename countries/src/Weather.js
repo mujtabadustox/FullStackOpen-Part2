@@ -7,10 +7,6 @@ const Weather = ({ capital }) => {
   const api_key = process.env.REACT_APP_API_KEY;
 
   useEffect(() => {
-    const details = {
-      access_key: api_key,
-      query: capital,
-    };
     console.log("ww", api_key);
     axios
       .get(
