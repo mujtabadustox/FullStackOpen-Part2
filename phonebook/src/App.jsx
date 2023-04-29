@@ -12,7 +12,7 @@ const Notification = ({ error }) => {
 };
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [persons, setPersons] = useState(null);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [showAll, setShowAll] = useState(true);
@@ -161,12 +161,14 @@ const App = () => {
         handleNewNumber={handleNewNumber}
       />
       <h3>Numbers</h3>
-      <Persons
-        showAll={showAll}
-        persons={persons}
-        filteredName={filteredName}
-        deletePerson={deletePerson}
-      />
+      {persons && (
+        <Persons
+          showAll={showAll}
+          persons={persons}
+          filteredName={filteredName}
+          deletePerson={deletePerson}
+        />
+      )}
     </div>
   );
 };
