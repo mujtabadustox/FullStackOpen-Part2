@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Country from "./Country";
+import { isEditable } from "@testing-library/user-event/dist/utils";
 
 const App = () => {
   const [countries, setCountries] = useState(null);
@@ -16,11 +18,14 @@ const App = () => {
 
   const searchCountries = (event) => {
     setSearchedCountry(event.target.value);
+    setIsPressed(false);
 
     console.log("dsdas", searchedCountry);
+    console.log("ISPRESSED", isPressed);
 
     if (searchedCountry.length === 1) {
       setFilteredCountries(null);
+      setIsPressed(false);
     } else {
       console.log("aaaaaa");
       setFilteredCountries(
@@ -56,44 +61,11 @@ const App = () => {
         <input value={searchedCountry} onChange={searchCountries}></input>
       </div>
       <div>
-        {filteredCountries &&
-          filteredCountries.length !== 1 &&
-          filteredCountries.length < 10 &&
-          filteredCountries.map((countries) => (
-            <div>
-              <p>
-                {countries.name.common}{" "}
-                <button
-                  type="btn"
-                  value={countries.name.common}
-                  onClick={btnPressed}
-                >
-                  show
-                </button>
-              </p>
-            </div>
-          ))}
-        {filteredCountries &&
-          (filteredCountries.length === 1 || isPressed) &&
-          filteredCountries.map((countries) => (
-            <div>
-              <h1>{countries.name.common}</h1>
-              <p>Capital:{countries.capital}</p>
-              <p>Area:{countries.area}</p>
-              <h2>Languages</h2>
-              {countries.languages &&
-                Object.entries(countries.languages).map(([key, value]) => (
-                  <div>
-                    <p>{value}</p>
-                    {console.log("sss", value)}
-                  </div>
-                ))}
-              <img src={countries.flags.png} alt="Flag" />
-            </div>
-          ))}
-        {filteredCountries && filteredCountries.length > 10 && (
-          <div>Too many matches,specify another filter</div>
-        )}
+        <Country
+          filteredCountries={filteredCountries}
+          btnPressed={btnPressed}
+          isPressed={isPressed}
+        />
       </div>
     </div>
   );
