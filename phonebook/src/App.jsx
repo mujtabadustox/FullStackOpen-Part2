@@ -5,6 +5,11 @@ import PersonForm from "./PersonForm";
 import Persons from "./Persons";
 import personService from "./services/person";
 import person from "./services/person";
+import "./index.css";
+
+const Notification = ({ error }) => {
+  return <div className={`${error.type}`}>{error.msg}</div>;
+};
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,6 +17,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [showAll, setShowAll] = useState(true);
   const [filteredName, setFilteredName] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((response) => {
@@ -38,12 +44,35 @@ const App = () => {
         const id = idFound ? idFound.id : null;
         const updatedObject = { ...idFound, number: newNumber };
 
-        personService.update(id, updatedObject).then((response) => {
-          console.log(response.data);
-          setPersons(
-            persons.map((person) => (person.id !== id ? person : response.data)) //if id is the one then put newdata else old
-          );
-        });
+        personService
+          .update(id, updatedObject)
+          .then((response) => {
+            console.log(response.data);
+            setPersons(
+              persons.map((person) =>
+                person.id !== id ? person : response.data
+              ) //if id is the one then put newdata else old
+            );
+            setErrorMessage({
+              msg: `Updated ${updatedObject.name} New Number: ${updatedObject.number}`,
+              type: "success",
+            });
+
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000);
+          })
+          .catch((error) => {
+            console.log(error);
+            setErrorMessage({
+              msg: `Information of ${updatedObject.name} has already been removed from the server`,
+              type: "error",
+            });
+
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000);
+          });
       } else {
         return;
       }
@@ -54,12 +83,26 @@ const App = () => {
         id: persons.length + 1,
       };
 
-      personService.create(personObject).then((respone) => {
-        console.log(respone.data);
-        setPersons(persons.concat(personObject));
-        setNewName("");
-        setNewNumber("");
-      });
+      personService
+        .create(personObject)
+        .then((response) => {
+          console.log(response.data);
+          setPersons(persons.concat(personObject));
+          setErrorMessage({
+            msg: `Added ${personObject.name}`,
+            type: "success",
+          });
+
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((error) => {
+          console.log("error");
+        });
     }
   };
 
@@ -86,16 +129,22 @@ const App = () => {
         (person) => person.name === event.target.value
       );
       const id = idFound ? idFound.id : null;
-      personService.removeUser(id).then((respone) => {
-        console.log(respone.data);
-        setPersons(persons.filter((person) => person.id !== id));
-      });
+      personService
+        .removeUser(id)
+        .then((respone) => {
+          console.log(respone.data);
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      {errorMessage && <Notification error={errorMessage} />}
       <div>
         <Filter
           filteredName={filteredName}
